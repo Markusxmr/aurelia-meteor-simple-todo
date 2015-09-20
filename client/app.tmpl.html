@@ -1,0 +1,49 @@
+<template>
+  <div class="container">
+    <header>
+      <h1>Todo List ${hideCompleted}</h1>
+    </header>
+
+    <label class="hide-completed">
+      <input type="checkbox" checked.bind="hide_completed"  />
+      Hide Completed Tasks
+    </label>
+
+    <div if.bind="current_user">
+      <form class="new-task" submit.delegate="newTask()">
+        <input type="text" name="text" placeholder="Type to add new tasks" value.bind="text"/>
+      </form>
+    </div>
+
+    <ul>
+      <li repeat.for="task of tasks" class="${task.checked ? 'checked' : ''}">
+        <button class="delete"
+                click.delegate="$parent.delete(task._id, task.private)"
+                if.bind="task.owner === $parent.userId">
+                &times;
+        </button>
+
+        <input type="checkbox"
+               checked.bind="task.checked"
+               click.delegate="$parent.toggleChecked(task._id, task.checked)"
+               if.bind="task.owner === $parent.userId"
+               />
+
+          <button class="toggle-private"
+                  click.delegate="$parent.togglePrivate(task._id, task.private)"
+                  if.bind="task.owner === $parent.userId">
+
+            <div if.bind="task.private">
+              Private
+            </div>
+            <div if.bind="!task.private">
+              Public
+            </div>
+          </button>
+
+        <span class="text"><strong>${task.username}</strong> - ${task.text}</span>
+      </li>
+    </ul>
+
+  </div>
+</template>
